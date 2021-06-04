@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="HelveticaNeue.ttc">
+            <string>HelveticaNeue</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SearchTableViewCell" id="KGk-i7-Jjw" customClass="SearchTableViewCell" customModule="Foody_CookBook" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oGF-Dh-aYk">
+                        <rect key="frame" x="77" y="12" width="42" height="20"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sSx-sQ-0dY">
+                        <rect key="frame" x="274" y="7" width="30" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="30" id="9HH-qn-gs9"/>
+                            <constraint firstAttribute="width" secondItem="sSx-sQ-0dY" secondAttribute="height" multiplier="1:1" id="Tbo-MD-P3H"/>
+                        </constraints>
+                        <state key="normal" image="star" catalog="system"/>
+                    </button>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kqi-RJ-9xh">
+                        <rect key="frame" x="16" y="4" width="45" height="36"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="45" id="eao-hI-P9m"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="kqi-RJ-9xh" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="Jpq-5Z-ELY"/>
+                    <constraint firstItem="sSx-sQ-0dY" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="KgG-u7-V7d"/>
+                    <constraint firstAttribute="trailing" secondItem="sSx-sQ-0dY" secondAttribute="trailing" constant="16" id="OiN-6d-Ft8"/>
+                    <constraint firstAttribute="bottom" secondItem="kqi-RJ-9xh" secondAttribute="bottom" constant="4" id="SBX-Br-k1u"/>
+                    <constraint firstItem="oGF-Dh-aYk" firstAttribute="leading" secondItem="kqi-RJ-9xh" secondAttribute="trailing" constant="16" id="VKt-Rc-eP0"/>
+                    <constraint firstItem="kqi-RJ-9xh" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="4" id="xED-K4-qGZ"/>
+                    <constraint firstItem="oGF-Dh-aYk" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="xaj-Gg-Scq"/>
+                    <constraint firstItem="kqi-RJ-9xh" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="zMs-hi-XcS"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="btnFavourite" destination="sSx-sQ-0dY" id="hkz-bu-e8P"/>
+                <outlet property="lblName" destination="oGF-Dh-aYk" id="dcW-Mt-3TD"/>
+                <outlet property="searchImageview" destination="kqi-RJ-9xh" id="SnU-Qh-S40"/>
+            </connections>
+            <point key="canvasLocation" x="18.840579710144929" y="103.79464285714285"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="star" catalog="system" width="128" height="116"/>
+    </resources>
+</document>
