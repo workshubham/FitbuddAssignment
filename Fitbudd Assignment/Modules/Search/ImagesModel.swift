@@ -38,7 +38,7 @@ struct ImagesModel {
         pageURL = data["pageURL"] as? String ?? ""
         type = data["type"] as? String ?? ""
         tags = data["tags"] as? String ?? ""
-        userImageURL = data["userImageURL"] as? String ?? ""
+        userImageURL = data["largeImageURL"] as? String ?? ""
         user = data["user"] as? String ?? ""
     }
 }

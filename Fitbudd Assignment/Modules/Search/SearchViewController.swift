@@ -25,6 +25,14 @@ class SearchViewController: UIViewController {
         return slideContainer
     }()
     
+    private lazy var resultCollectionView: SearchCollectionView = {
+        let collectionView = SearchCollectionView()
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.isHidden = true
+        view.addSubview(collectionView)
+        return collectionView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
@@ -46,14 +54,32 @@ class SearchViewController: UIViewController {
         fullScreenSlideContainer.slides = slides
     }
     
+    /// Setting up result collection view constaint
+    private func setUpResultCollectionViewConstraint() {
+        resultCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            resultCollectionView.topAnchor.constraint(equalTo: tableView.topAnchor),
+            resultCollectionView.bottomAnchor.constraint(equalTo: tableView.bottomAnchor),
+            resultCollectionView.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),
+            resultCollectionView.trailingAnchor.constraint(equalTo: tableView.trailingAnchor)
+        ])
+    }
+    
     /// Setting up view
     private func setUpView() {
         searchBar.delegate = self
         searchBar.searchTextField.placeholder = "Search by name"
-        tableView.selectImage = { [weak self] (images, index) in
-            self?.showLargeImages(images: images, index: index)
+        setUpResultCollectionViewConstraint()
+        tableView.searchFromRecentSearch = { [weak self] searchText in
+            self?.pageNumber = 1
+            self?.searchBar.text = searchText
+            self?.resultCollectionView.imagesData = []
+            self?.resultCollectionView.restore()
+            self?.showResultsCollectionView()
+            self?.searchImages(searchedText: searchText)
         }
-        tableView.loadMoreData = { [weak self] _ in
+        tableView.setEmptyMessage("Search for images")
+        resultCollectionView.loadMoreData = { [weak self] _ in
             self?.checkForMoreData()
         }
     }
@@ -69,10 +95,26 @@ class SearchViewController: UIViewController {
     
     /// Checking for more data
     private func checkForMoreData() {
-        if tableView.imageResponseData.totalItems > tableView.imagesData.count {
+        if resultCollectionView.imageResponseData.totalItems > resultCollectionView.imagesData.count {
             pageNumber += 1
             searchImages(searchedText: searchBar.text ?? "")
         }
+    }
+    
+    /// Show results collection view
+    private func showResultsCollectionView() {
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .transitionCrossDissolve, animations: { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.resultCollectionView.isHidden = false
+        }, completion: nil)
+    }
+    
+    /// Hide results collection view
+    private func hideResultsCollectionView() {
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .transitionCrossDissolve, animations: { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.resultCollectionView.isHidden = true
+        }, completion: nil)
     }
     
     // MARK: IBActions
@@ -87,11 +129,37 @@ extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let searchText = searchBar.text, !searchText.isEmpty {
             pageNumber = 1
-            tableView.imagesData = []
+            resultCollectionView.imagesData = []
+            resultCollectionView.restore()
+            showResultsCollectionView()
+            searchBar.showsCancelButton = false
             searchImages(searchedText: searchText)
         }
         searchBar.resignFirstResponder()
     }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            hideResultsCollectionView()
+            if tableView.recentSearches.count == 0 {
+                tableView.setEmptyMessage("Search for images")
+            } else {
+                tableView.restore()
+            }
+        }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = nil
+        searchBar.resignFirstResponder()
+        searchBar.showsCancelButton = false
+        hideResultsCollectionView()
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = true
+    }
+    
 }
 
 // MARK: Request Generator
@@ -105,15 +173,17 @@ extension SearchViewController: RequestGeneratorProtocol {
             guard let strongSelf = self else { return }
             if let response = response {
                 if response.totalItems == 0 {
-                    strongSelf.tableView.setEmptyMessage("Nothing here!")
-                    strongSelf.tableView.imagesData = []
-                    strongSelf.tableView.reloadData()
+                    strongSelf.resultCollectionView.setEmptyMessage("Nothing here!")
+                    strongSelf.resultCollectionView.imagesData = []
+                    strongSelf.resultCollectionView.reloadData()
                 } else {
                     if strongSelf.pageNumber == 1 {
-                        strongSelf.tableView.recentSearches.append(searchedText)
+                        if !strongSelf.tableView.recentSearches.contains(searchedText) {
+                            strongSelf.tableView.recentSearches.insert(searchedText, at: 0)
+                        }
                     }
-                    strongSelf.tableView.restore()
-                    strongSelf.tableView.imageResponseData = response
+                    strongSelf.resultCollectionView.restore()
+                    strongSelf.resultCollectionView.imageResponseData = response
                 }
             } else if let err = error {
                 strongSelf.view.endEditing(true)
