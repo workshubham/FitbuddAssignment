@@ -82,6 +82,9 @@ class SearchViewController: UIViewController {
         resultCollectionView.loadMoreData = { [weak self] _ in
             self?.checkForMoreData()
         }
+        resultCollectionView.selectImage = { [weak self] (images, index) in
+            self?.showLargeImages(images: images, index: index)
+        }
     }
     
     /// Showing slides of images
